@@ -1,28 +1,16 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import AddTask from "./components/AddTask";
 import Tasks from "./components/Tasks";
+import Title from "./components/Title";
 
 const App = () => {
-    const [tasks, setTasks] = useState([
-        {
-            id: 1,
-            title: "estudar",
-            description: "estudar para a prova",
-            isCompleted: false,
-        },
-        {
-            id: 2,
-            title: "ler",
-            description: "ler um livro",
-            isCompleted: false,
-        },
-        {
-            id: 3,
-            title: "correr",
-            description: "correr na praça",
-            isCompleted: false,
-        },
-    ]);
+    const [tasks, setTasks] = useState(
+        JSON.parse(localStorage.getItem("tasks")) || []
+    );
+
+    useEffect(() => {
+        localStorage.setItem("tasks", JSON.stringify(tasks));
+    }, [tasks]);
 
     function onTaskClick(taskId) {
         const newTasks = tasks.map((task) => {
@@ -58,12 +46,7 @@ const App = () => {
     return (
         <div className="w-screen h-screen bg-slate-500 flex justify-center p-6">
             <div className="w-[500px] space-y-4">
-                <h1
-                    className="text-3xl text-slate-100 font-bold text-center"
-                    onDoubleClick={() => (location.href = location.href)}
-                >
-                    Gerenciador de Tarefas
-                </h1>
+                <Title>Gerenciador de Tarefas</Title>
                 <AddTask onAddTaskSubmit={onAddTaskSubmit} />
                 <Tasks
                     tasks={tasks}
